@@ -9,8 +9,8 @@ services:
       - --storage.tsdb.retention.time=7d
       - --config.file=/etc/prometheus/prometheus.yml
     volumes:
-      - "./conf/prometheus.yml:/etc/prometheus/prometheus.yml"
-      - "./conf/alerts.rules.yml:/etc/prometheus/rules.yml"
+      - "./conf/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml"
+      - "./conf/prometheus/alerts.rules.yml:/etc/prometheus/rules.yml"
       - prometheusData:/prometheus
     networks:
       - obs-lab
@@ -26,6 +26,8 @@ services:
     depends_on:
       - prometheus
     volumes:
+      - "./conf/grafana/datasources:/etc/grafana/provisioning/datasources"
+      - "./conf/grafana/dashboards:/etc/grafana/provisioning/dashboards"
       - grafanaData:/var/lib/grafana
     networks:
       - obs-lab
@@ -43,16 +45,16 @@ services:
     depends_on:
       - prometheus
     volumes:
-      - "./conf/alertmanager.yml:/etc/alertmanager/alertmanager.yml"
+      - "./conf/prometheus/alertmanager.yml:/etc/alertmanager/alertmanager.yml"
       - alertmanagerData:/data
     networks:
       - obs-lab
     ports:
       - 9093:9093
 
-  node-exporter1:
-    container_name: node-exporter1
-    hostname: node-exporter1
+  node-exporter-1:
+    container_name: node-exporter-1
+    hostname: node-exporter-1
     image: prom/node-exporter
     restart: always
     depends_on:
@@ -60,11 +62,11 @@ services:
     networks:
       - obs-lab
     ports:
-      - 9100:9100
+      - 9101:9100
 
-  node-exporter2:
-    container_name: node-exporter2
-    hostname: node-exporter2
+  node-exporter-2:
+    container_name: node-exporter-2
+    hostname: node-exporter-2
     image: prom/node-exporter
     restart: always
     depends_on:
@@ -72,7 +74,7 @@ services:
     networks:
       - obs-lab
     ports:
-      - 9200:9100
+      - 9102:9100
 
 networks:
     obs-lab:
